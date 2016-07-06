@@ -35,7 +35,3 @@ USER_STATUS = 'account/info?'
 PROCESS_NUM = 2
 SERVER_PORT = 5002
 
-try:
-    from local_config import *
-except ImportError:
-    logging.warning("No local_config file found.")
