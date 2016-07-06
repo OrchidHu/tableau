@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json, md5, requests, datetime
-from Conf import config
+from conf import config
 from pony.orm import *
 
 class Build_Url(object):
