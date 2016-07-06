@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import json, md5, requests, datetime
 from Conf import config
 from pony.orm import *
