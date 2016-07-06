@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json, md5, requests, datetime
-from Conf import config
+from conf import config
 from pony.orm import *
 from model.models import *
 from tool import tools
@@ -22,7 +22,7 @@ class Pylzh_Process(object):
     @db_session
     def save_info(self, response):
         all_data = json.loads(response.text)
-        #__import__("ipdb").set_trace()
+        __import__("ipdb").set_trace()
         if all_data.get('data'):
             try:
                 self.save_data(all_data)
