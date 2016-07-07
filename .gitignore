@@ -1,4 +1,4 @@
 *.pyc
 *.swp
-.gitignore
-local/local_config.py
+local/*
+.#*
