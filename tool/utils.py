@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-import json, md5, requests, datetime
+import json, md5, requests, datetime, re
 from conf import config
 from pony.orm import *
 from datetime import *
@@ -42,6 +42,23 @@ def exact_to_month(time_str):
     except Exception, e:
         return None
     return new_time
+
+def parse_to_dict(data, null=True):
+    ret = {}
+    try:
+        data_list = data.split(';')
+    except Exception, e:
+        return {}
+    for em in data_list:
+        result = re.search(r'([\D\d]+)_([\D\d]*)', em)
+        if result:
+            key = result.group(1)
+            value = result.group(2)
+            if not value and null is True:
+                value = None
+            ret[key] = value
+    return ret
+
 
 class Build_Url(object):
     def request_url(self, param_dict):

@@ -39,7 +39,7 @@ class BN_BASE_STATISTIC_INFO(db.Entity):
     update_time = Optional(datetime)
 
 class BN_MONTH_CONSUME(db.Entity):
-    orderId = PrimaryKey(str, 55)
+    orderId = Optional(str, 55)
     cert_no = Optional(str, 20)
     bank_card_no = Optional(str, 20)
     name = Optional(str, 20)
@@ -69,7 +69,7 @@ class BN_LIVE_CITY(db.Entity):
 
 
 class BN_MCC_CONSUME(db.Entity):
-    orderId = PrimaryKey(str, 55)
+    orderId = Optional(str, 55)
     cert_no = Optional(str, 20)
     bank_card_no = Optional(str, 20)
     name = Optional(str, 20)
@@ -83,7 +83,7 @@ class BN_MCC_CONSUME(db.Entity):
 
 
 class BN_HIGH_FREQ_MAR(db.Entity):
-    orderId = PrimaryKey(str, 55)
+    orderId = Optional(str, 55)
     cert_no = Optional(str, 20)
     bank_card_no = Optional(str, 20)
     name = Optional(str, 20)
@@ -94,7 +94,7 @@ class BN_HIGH_FREQ_MAR(db.Entity):
 
 
 class BN_TOP_MONEY_MAR(db.Entity):
-    orderId = PrimaryKey(str, 55)
+    orderId = Optional(str, 55)
     cert_no = Optional(str, 20)
     bank_card_no = Optional(str, 20)
     name = Optional(str, 20)
@@ -104,7 +104,7 @@ class BN_TOP_MONEY_MAR(db.Entity):
 
 
 class BN_CONSUME_CITY_TIMES(db.Entity):
-    orderId = PrimaryKey(str, 55)
+    orderId = Optional(str, 55)
     cert_no = Optional(str, 20)
     bank_card_no = Optional(str, 20)
     name = Optional(str, 20)
