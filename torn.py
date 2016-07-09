@@ -24,36 +24,37 @@ class MainHandler(web.RequestHandler):
     @tornado.web.asynchronous
     @tornado.gen.coroutine
     def get(self):
-        ram_data = {
-            'account': config.ACCOUNT,
-            'orderId': 'byjr_8ad22395309a120530c6e12a20260',
-            'card': '6222629530002562008',
-            'identityCard': '410422199003197012',
-            'identityType': '001',
-            'index': 'all',
-            'mobile': '18625708694',
-            'name': 'du培源'
-        }
-        json_data = json.dumps(ram_data)
-        self.ylzh_proc(json_data)
-        #for line in open('data.txt', 'r'):
-        #    if line.strip():
-        #        srt = re.match(r'"([\D\d]+)"\t"([\D\d]+)"\t"([\D\d]+)"\t"([\D\d]+)"\t"([\D\d]+)"\t', line.strip())
-        #        try:
-        #            ram_data = {
-        #                'account': config.ACCOUNT,
-        #                'orderId': 'byjr_'+srt.group(1),
-        #                'card': srt.group(2),
-        #                'index': 'all',
-        #                'identityCard': srt.group(4),
-        #                'identityType': '001',
-        #                'mobile': srt.group(5),
-        #                'name': srt.group(3),
-        #            }
-        #        except Exception, e:
-        #             continue
-        #        json_data = json.dumps(ram_data)
-        #        self.ylzh_proc(json_data)
+        #ram_data = {
+        #    'account': config.ACCOUNT,
+        #    'orderId': 'byjr_8ad22395309a120530c6e12a20260',
+        #    'card': '6222629530002562008',
+        #    'identityCard': '410422199003197012',
+        #    'identityType': '001',
+        #    'index': 'all',
+        #    'mobile': '18625708694',
+        #    'name': 'du培源'
+        #}
+        #json_data = json.dumps(ram_data)
+        #self.ylzh_proc(json_data)
+        for line in open('data.txt', 'r'):
+            if line.strip():
+                srt = re.match(r'"([\D\d]+)"\t"([\D\d]+)"\t"([\D\d]+)"\t"([\D\d]+)"\t"([\D\d]+)"\t', line.strip())
+                try:
+                    ram_data = {
+                        'account': config.ACCOUNT,
+                        'orderId': 'byjr_'+srt.group(1),
+                        'card': srt.group(2),
+                        'index': 'all',
+                        'identityCard': srt.group(4),
+                        'identityType': '001',
+                        'mobile': srt.group(5),
+                        'name': srt.group(3),
+                    }
+                except Exception, e:
+                     continue
+                json_data = json.dumps(ram_data)
+                self.ylzh_proc(json_data)
+    
     
     @run_on_executor
     def ylzh_proc(self, json_data):
@@ -74,5 +75,5 @@ if __name__ == "__main__":
     ioloop.IOLoop.instance().start()
     server = httpserver.HTTPServer(app)
     server.bind(config.SERVER_PORT)
-    server.start(3004)
+    server.start(4)
     #ioloop.IOLoop.instance().start()

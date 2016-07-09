@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import json, md5, requests, datetime, clean
+import json, md5, requests, clean
 from conf import config
+from datetime import datetime
 from pony.orm import *
 from model.models import *
 from tool import utils
@@ -14,30 +15,44 @@ class Pylzh_Process(object):
     def request_data(self, json_data):
         param_dict = json.loads(json_data)
         request_url = self.build_url.request_url(param_dict)
+        self.request_time = None
+        self.parse_time = None
         try:
+            request_start = datetime.now()
             response = requests.get(request_url, verify=False)
+            request_end = datetime.now()
             all_data = json.loads(response.text)
             self.order_id = all_data.get('orderId', '')
+            self.order_id = param_dict.get('orderId', '')
             self.cert_no = '51152119902022322'
             self.bank_card_no = '621123812839123912'
             self.name = u'张三'
-            self.time_now = datetime.now() 
-            self.save_info(all_data)
+            self.time_now = datetime.now()
+            self.request_time = request_end - request_start
+            print '$$$$',self.request_time
         except Exception, e:
-            return e.message
+            raise e
         data = all_data.get('data')
         result = data.get('result', {})
         quota = result.get('quota', {})
         quota = clean.data
         if quota:
-            self.format_str.clean_na(quota)
-            self.save_base_statistic_info(quota)
-            self.save_month_consume(quota)
-            self.save_live_city(quota)
-            self.save_mcc_consume(quota)
-            self.save_high_freq_mar(quota)
-            self.save_top_money_mar(quota)
-            self.save_consume_city_times(quota)
+            try:
+                parse_start = datetime.now()
+                self.format_str.clean_na(quota)
+                self.save_base_statistic_info(quota)
+                self.save_month_consume(quota)
+                self.save_live_city(quota)
+                self.save_mcc_consume(quota)
+                self.save_high_freq_mar(quota)
+                self.save_top_money_mar(quota)
+                self.save_consume_city_times(quota)
+                parse_end = datetime.now()
+                self.parse_time = parse_end - parse_start
+                self.save_info(all_data)
+                print self.parse_time
+            except Exception, e:
+                raise e
         return 'ylzh请求成功'
 
     @db_session
@@ -50,6 +65,8 @@ class Pylzh_Process(object):
             statMsg = all_data.get('statMsg', ''),
             smartOrderId = all_data.get('smartOrderId', ''),
             sign = all_data.get('sign', ''),
+            request_time = self.request_time,
+            parse_time = self.parse_time,
             create_time = self.time_now,
         )
 

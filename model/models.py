@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
-
+from datetime import *
 from pony.orm import *
 from pony import orm
 from datetime import datetime
 db = Database()
 
-
 class REQUEST_INFO(db.Entity):
-    orderId = PrimaryKey(str, 55)
+    orderId = Optional(str, 55)
     resCode = Optional(int)
     resMsg = Optional(str, 10)
     statCode = Optional(int)
     statMsg = Optional(str, 55)
     smartOrderId = Optional(str, 55)
     sign = Optional(str, 55)
+    request_time = Optional(timedelta)
+    parse_time = Optional(timedelta)
     create_time = Optional(datetime)
     update_time = Optional(datetime)
 
 
 class BN_BASE_STATISTIC_INFO(db.Entity):
-    orderId = PrimaryKey(str, 55)
+    orderId = Optional(str, 55)
     cert_no = Optional(str, 20)
     bank_card_no = Optional(str, 20)
     name = Optional(str, 20)
@@ -54,7 +55,7 @@ class BN_MONTH_CONSUME(db.Entity):
 
 
 class BN_LIVE_CITY(db.Entity):
-    orderId = PrimaryKey(str, 55)
+    orderId = Optional(str, 55)
     cert_no = Optional(str, 20)
     bank_card_no = Optional(str, 20)
     name = Optional(str, 20)
