@@ -60,28 +60,36 @@ def parse_to_dict(data, null=True):
     return ret
 
 
-class Build_Url(object):
-    def request_url(self, param_dict):
-        url = config.DOMAIN + config.USER_DATA
-        for key, val in param_dict.items():
-            url += key + '=' + val + '&'
-        sign = self.parce_param(param_dict)
-        url += 'sign' + '=' + sign
-        return url
+class Request_Model(object):
+    def request_params(self, param_dict):
+        sign = self._parce_param(param_dict)
+        param_dict['sign'] = sign
+        return param_dict
 
-    def parce_param(self, param_dict):
+    def _parce_param(self, param_dict):
         shabby_str = ''
         for key in sorted(param_dict.keys()):
             shabby_str += key.encode('utf8') + param_dict[key]
         shabby_str += config.PRIVATE_KEY
-        return self.md5_encrypt(shabby_str)
+        return self._md5_encrypt(shabby_str)
 
-    def md5_encrypt(self, shabby_str):
+    def _md5_encrypt(self, shabby_str):
         shabby_str=shabby_str.encode('utf8')
         md5_str = md5.new()
         md5_str.update(shabby_str)
         md5_str = md5_str.hexdigest()
         return md5_str.upper()
+
+    def request_get(self, url, params):
+        try:
+            re = requests.get(url, params=params, verify=False)
+        except Exception, e:
+            raise e
+        return re
+    
+    def request_post(self, url, data):
+        r= requests.post(url, data=data)
+        return r.url
 
 
 class Format_Str(object):

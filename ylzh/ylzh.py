@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import json, md5, requests, clean
+import json, md5, requests
 from conf import config
 from datetime import datetime
 from pony.orm import *
@@ -9,17 +9,21 @@ from tool.utils import *
 
 class Pylzh_Process(object):
     def __init__(self):
-        self.build_url = utils.Build_Url()
+        self.request_model = utils.Request_Model()
         self.format_str = utils.Format_Str()
 
     def request_data(self, json_data):
         param_dict = json.loads(json_data)
-        request_url = self.build_url.request_url(param_dict)
+        self.params = self.request_model.request_params(param_dict)
+        url = config.DOMAIN+config.USER_DATA
+        response = self.request_model.request_get(
+            url,
+            self.params
+        )
         self.request_time = None
         self.parse_time = None
         try:
             request_start = datetime.now()
-            response = requests.get(request_url, verify=False)
             request_end = datetime.now()
             all_data = json.loads(response.text)
             self.order_id = all_data.get('orderId', '')
@@ -32,10 +36,9 @@ class Pylzh_Process(object):
             print '$$$$',self.request_time
         except Exception, e:
             raise e
-        data = all_data.get('data')
+        data = all_data.get('data', {})
         result = data.get('result', {})
         quota = result.get('quota', {})
-        quota = clean.data
         if quota:
             try:
                 parse_start = datetime.now()
@@ -49,10 +52,10 @@ class Pylzh_Process(object):
                 self.save_consume_city_times(quota)
                 parse_end = datetime.now()
                 self.parse_time = parse_end - parse_start
-                self.save_info(all_data)
-                print self.parse_time
             except Exception, e:
                 raise e
+        self.save_info(all_data)
+        print self.parse_time
         return 'ylzh请求成功'
 
     @db_session
