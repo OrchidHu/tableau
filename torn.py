@@ -13,8 +13,8 @@ from ylzh.ylzh import Pylzh_Process
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 import tornado.httpserver
-from queryapi.urls import URLS
-
+from queryapi.urls import URLS as urls
+from tool.utils import get_db
 
 class MainHandler(web.RequestHandler):
     executor = ThreadPoolExecutor(30)
@@ -67,13 +67,13 @@ if __name__ == "__main__":
         'debug': True
     }
     # URLS is belong to queryapi
-    urls = URLS.append((r"/", MainHandler))
+    urls.append((r"/", MainHandler))
     app = web.Application(urls,  **settings)
-    db.bind('mysql', host=config.MYSQL_HOST, user=config.MYSQL_USER, passwd=config.MYSQL_PASSWORD, db=config.DB_NAME)
+    db = get_db()
     db.generate_mapping(create_tables=True)
     app.listen(8888)
     ioloop.IOLoop.instance().start()
     server = httpserver.HTTPServer(app)
     server.bind(config.SERVER_PORT)
-    server.start(4)
+    server.start(config.SERVER_NUM)
 
