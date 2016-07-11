@@ -16,7 +16,7 @@ import tornado.httpserver
 
 
 class MainHandler(web.RequestHandler):
-    executor = ThreadPoolExecutor(50)
+    executor = ThreadPoolExecutor(30)
 
     def initialize(self):
         self.ylzh_process = Pylzh_Process()
@@ -54,18 +54,16 @@ class MainHandler(web.RequestHandler):
                      continue
                 json_data = json.dumps(ram_data)
                 self.ylzh_proc(json_data)
-    
-    
+
     @run_on_executor
     def ylzh_proc(self, json_data):
         res = self.ylzh_process.request_data(json_data)
-        self.write(res)
+
 			
 if __name__ == "__main__":
     settings = {
         'debug': True
     }
-
     app = web.Application([
         (r"/", MainHandler),
     ],  **settings)
@@ -76,4 +74,3 @@ if __name__ == "__main__":
     server = httpserver.HTTPServer(app)
     server.bind(config.SERVER_PORT)
     server.start(4)
-    #ioloop.IOLoop.instance().start()
