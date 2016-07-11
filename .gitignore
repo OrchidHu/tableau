@@ -1,4 +1,6 @@
 *.pyc
 *.swp
-local_*.py
+conf/
 .#*
+*.py.*
+*.swo
