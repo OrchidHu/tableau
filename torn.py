@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import tornado.httpserver
+from concurrent.futures import ThreadPoolExecutor
 from tornado import (
         ioloop,
         web,
         httpserver
     )
-import json, md5, requests, datetime, re
+from tornado.concurrent import run_on_executor
+
 from conf import config
-from pony.orm import *
 from model.models import *
 from ylzh.ylzh import Pylzh_Process
-from tornado.concurrent import run_on_executor
-from concurrent.futures import ThreadPoolExecutor
-import tornado.httpserver
+from queryapi.urls import URLS
 
 
 class MainHandler(web.RequestHandler):
@@ -60,15 +60,14 @@ class MainHandler(web.RequestHandler):
     def ylzh_proc(self, json_data):
         res = self.ylzh_process.request_data(json_data)
         self.write(res)
-			
+
 if __name__ == "__main__":
     settings = {
         'debug': True
     }
-
-    app = web.Application([
-        (r"/", MainHandler),
-    ],  **settings)
+    # URLS is belong to queryapi
+    urls = URLS.append((r"/", MainHandler))
+    app = web.Application(urls,  **settings)
     db.bind('mysql', host=config.MYSQL_HOST, user=config.MYSQL_USER, passwd=config.MYSQL_PASSWORD, db=config.DB_NAME)
     db.generate_mapping(create_tables=True)
     app.listen(8888)
@@ -77,3 +76,4 @@ if __name__ == "__main__":
     server.bind(config.SERVER_PORT)
     server.start(4)
     #ioloop.IOLoop.instance().start()
+
