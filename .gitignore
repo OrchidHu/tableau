@@ -1,6 +1,7 @@
 *.pyc
 *.swp
-conf/
+#local_config.py
+#db_config.py
 .#*
 *.py.*
 *.swo

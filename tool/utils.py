@@ -3,7 +3,7 @@
 
 
 import json, md5, requests, datetime, re
-from conf import (config, db_config)
+from conf import config
 from pony.orm import *
 from model.models import *
 from datetime import *
@@ -45,8 +45,8 @@ def exact_to_month(time_str):
     return new_time
 
 def get_db():
-    db.bind('mysql', host=db_config.MYSQL_HOST, user=db_config.MYSQL_USER, 
-            passwd=db_config.MYSQL_PASSWORD, db=db_config.DB_NAME
+    db.bind('mysql', host=config.MYSQL_HOST, user=config.MYSQL_USER, 
+            passwd=config.MYSQL_PASSWORD, db=config.DB_NAME
         )
     return db
 
